@@ -1,6 +1,5 @@
 # This is a basic workflow to help you get started with Actions
-
-name: CICD actions
+name: Homework CI-CD
 
 # Controls when the workflow will run
 on:
@@ -8,7 +7,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "jenk" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -22,16 +21,33 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
-          
+      - name: Show Java version
+        run: "java -version"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: jenk
+
+      - name: Show directory
+        run: 'pwd'
+
+      - name: List files
+        run: 'ls -al'
+
+      - name: Install dependencies
+        run: 'mvn compile'
+
+      - name: Build application
+        run: 'mvn package -DskipTests'
+
+      - name: Test application
+        run: 'mvn test'
+      
